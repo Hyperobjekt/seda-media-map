@@ -21,8 +21,12 @@ body { margin:0; padding:0; min-height: 500px; }
     margin-bottom: 8px;
 }
 .mapboxgl-popup-content a {
-    color: #e24000;
+    color: #469ee0;
     text-decoration: none;
+    display: inline-block;
+}
+.mapboxgl-popup-content p {
+    font-weight: bold;
 }
 .mapboxgl-popup-content p:last-child {
     margin-bottom: 16px;
