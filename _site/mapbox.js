@@ -1,4 +1,6 @@
 var SHEET_URL = 'https://spreadsheets.google.com/feeds/list/1vDvjR4Tgj9NnbLZwmSyJKDrEAE4gAHf0NUCjp2i7D90/1/public/values?alt=json'
+var LMS_SHEET_URL = 'https://spreadsheets.google.com/feeds/list/1vDvjR4Tgj9NnbLZwmSyJKDrEAE4gAHf0NUCjp2i7D90/3/public/values?alt=json'
+
 mapboxgl.accessToken = 'pk.eyJ1IjoiZXZpY3Rpb24tbGFiIiwiYSI6ImNqY20zamVpcTBwb3gzM28yb292YzM3dXoifQ.uKgAjsMd4qkJNqEtr3XyPQ';
 var map = new mapboxgl.Map({
     container: 'map',
@@ -14,6 +16,8 @@ var filter_end_date = null;
 
 var mediaData = {};
 
+var lmsmediaData = {};
+
 map.on('loaded', function() {
     pymChild.sendHeight();
 });
@@ -25,12 +29,35 @@ map.on('mouseleave', 'clusters', function() {
     map.getCanvas().style.cursor = '';
 });
 
+map.on('mouseenter', 'lmsclusters', function() {
+    map.getCanvas().style.cursor = 'pointer';
+});
+map.on('mouseleave', 'lmsclusters', function() {
+    map.getCanvas().style.cursor = '';
+});
+
 function createTooltip(coords, features) {
     var content = document.createElement('div');
-    content.innerHTML = features.map(function (f) {
+    console.log('features: ', features)
+    if (features[0].properties.lmsreferrerlinknotfordisplay) {
+        // LMS tool tip
+        content.innerHTML = features.map(function (f) {
+          return (
+            `<p>
+                <a target="_blank" href="${f.properties.institutionwebsite}">
+                    ${f.properties.institution}
+                </a>
+            </p>
+            <p>${f.properties.notesdisplayed}</p>`
+            )
+        })
+    } else {
+        // Media Coverage tool tip
+        content.innerHTML = features.map(function (f) {
         return '<p>' + f.properties.outlet + ' <a target="_blank" href="' +
             f.properties.link + '">' + f.properties.title + '</a></p>';
-    }).join('');
+        }).join('');
+    }
     new mapboxgl.Popup()
         .setLngLat(coords)
         .setDOMContent(content)
@@ -40,12 +67,20 @@ function createTooltip(coords, features) {
 }
 
 function featuresOnClick(e) {
+    if (e.originalEvent.cancelBubble) {
+        return;
+    } else { // prevent click event from passing along to other nearby clusters
+        e.originalEvent.cancelBubble = true;
+    }
+    console.log('e >>>>>>>>', e)
     if (e.features.length === 0) { return; }
     var coords = e.features[0].geometry.coordinates;
     if (!e.features[0].properties.hasOwnProperty('point_count')) {
+        // single item
         createTooltip(coords, e.features);
         return;
     }
+    // multiple items aggregated together into a cluster
     var r = 35;
 
     var bounds = map.getBounds();
@@ -56,7 +91,11 @@ function featuresOnClick(e) {
     var bbox = [sw.lng, sw.lat, ne.lng, ne.lat];
 
     var index = supercluster({ radius: r, maxZoom: 14 });
-    index.load(map.getSource('media').serialize().data.features);
+    if (e.features[0].layer.id === 'lmsclusters') {
+        index.load(map.getSource('lmsmedia').serialize().data.features);
+    } else {
+        index.load(map.getSource('media').serialize().data.features);
+    }
     var clusterCount = e.features[0].properties.point_count;
     var clusters = index.getClusters(bb, Math.floor(map.getZoom()));
     var matchClusters = clusters.filter(function (c) {
@@ -72,6 +111,7 @@ function featuresOnClick(e) {
     }
 }
 map.on('click', 'clusters', featuresOnClick);
+map.on('click', 'lmsclusters', featuresOnClick);
 
 var req = new XMLHttpRequest();
 req.addEventListener("load", function () {
@@ -101,21 +141,50 @@ req.addEventListener("load", function () {
         };
     });
     mediaData = { type: 'FeatureCollection', features: items };
-    // console.log(mediaData);
     map.getSource('media').setData(mediaData);
 });
 req.open("GET", SHEET_URL);
 req.send();
 
+var lmsreq = new XMLHttpRequest();
+lmsreq.addEventListener("load", function () {
+    var rows = JSON.parse(this.responseText).feed.entry;
+    var properties = Object.keys(rows[0])
+        .filter(function (p) { return p.startsWith("gsx$"); })
+        .map(function (p) { return p.substr(4); });
+
+    var items = rows.map(function (r) {
+        var row = {};
+        properties.forEach(function (p) {
+            row[p] = r["gsx$" + p].$t === "" ? null : r["gsx$" + p].$t;
+            if (['Latitude', 'Longitude'].indexOf(p) !== -1) {
+                row[p] = +row[p];
+            }
+            if (row[p] === null) {
+                row[p] = '';
+            }
+        });
+        return {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [row.longitude, row.latitude]
+            },
+            properties: row
+        };
+    });
+    lmsmediaData = { type: 'FeatureCollection', features: items };
+    map.getSource('lmsmedia').setData(lmsmediaData);
+});
+lmsreq.open("GET", LMS_SHEET_URL);
+lmsreq.send();
+
 jQuery(document).ready(function() {
-    // console.log( "ready!" );
     // Set date range max
     function setMaxDate() {
-        var date = new Date();  //it returns the date
+        var date = new Date();
         var month = date.getMonth();
-        // console.log('month = ' + month);
         var year = date.getFullYear();
-        // console.log('year = ' + year);
         $('#end_month_select').val(month).change();
         $('#end_year_select').val(year).change();
     }
@@ -134,7 +203,7 @@ jQuery(document).ready(function() {
             $('#start_year_select').val(),
             $('#start_month_select').val()
         );
-        // console.log(start);
+
         filter_start_date = start;
         // End, have to take the last day of the month,
         // which we will get by stepping back from the subsequent month.
@@ -147,17 +216,23 @@ jQuery(document).ready(function() {
             month = month + 1;
         }
         var end = new Date(year, month, 0);
-        // console.log(end);
         filter_end_date = end;
-        var newData = { type: 'FeatureCollection',
+        var newMediaData = { type: 'FeatureCollection',
             features: (mediaData.features).filter(function(obj) {
                 var pubDate = new Date(obj.properties.date);
                 return (pubDate >=  filter_start_date) && (pubDate <= filter_end_date);
             })
         };
-        // console.log(newData);
+        var newlmsMediaData = { type: 'FeatureCollection',
+            features: (lmsmediaData.features).filter(function(obj) {
+                var pubDate = new Date(obj.properties.date);
+                return (pubDate >=  filter_start_date) && (pubDate <= filter_end_date);
+            })
+        };
         // Reload the map.
-        map.getSource('media').setData(newData);
+        // TODO: verify filters are working
+        map.getSource('media').setData(newMediaData);
+        map.getSource('lmsmedia').setData(newlmsMediaData);
     });
 
     /**
@@ -166,7 +241,6 @@ jQuery(document).ready(function() {
      * @return null
      */
     function validateEndRange(el) {
-        // console.log('validateEndRange');
         // Get element and sibling
         var $el = $(el);
         var $month = $el.prev('.month');
@@ -176,10 +250,8 @@ jQuery(document).ready(function() {
         var thisYear = now.getFullYear();
         // Minimal max month validation against current year
         if ($el.val() == thisYear) {
-            // console.log('this year is selected');
             $month.find('option').each(function() {
                 if (Number(this.value) > thisMonth) {
-                    // console.log('number is greater than present month');
                     $(this).attr('disabled', 'disabled');
                 } else {
                     $(this).removeAttr('disabled');
@@ -202,25 +274,21 @@ jQuery(document).ready(function() {
      * @return null
      */
     function validateFullDateRange() {
-        // console.log('validateFullDateRange()');
         var start_month = Number($('#start_month_select').val());
         var start_year = Number($('#start_year_select').val());
         var end_month = Number($('#end_month_select').val());
         var end_year = Number($('#end_year_select').val());
 
         if (end_year === start_year) {
-            // console.log('End year equal to start year');
             // When end year same as start year,
             // if end month less than start month,
             // validation error. Else proceed.
             if (end_month < start_month) {
-                // console.log('invalid, disabling');
                 // Disable filter button
                 $('#filter_bydate').prop('disabled', 'disabled').text('Invalid date selection');
                 // Add invalid classes
                 $('#end_year_select, #end_month_select').addClass('select-invalid');
             } else {
-                // console.log('valid, enabling');
                 // Enable filter button
                 $('#filter_bydate').prop('disabled', false).text('Go');
                 // Add invalid classes
@@ -229,7 +297,6 @@ jQuery(document).ready(function() {
         } else if (end_year < start_year) {
             // When end year less than start year,
             // validation error.
-            // console.log('End year less than start year');
             // Disable filter button
             $('#filter_bydate').prop('disabled', 'disabled').text('Invalid date selection');
             // Add invalid classes
@@ -237,7 +304,6 @@ jQuery(document).ready(function() {
         } else {
             // Else remove any preceding validation
             // error warnings.
-            // console.log('valid, enabling');
             // Enable filter button
             $('#filter_bydate').prop('disabled', false).text('Go');
             // Add invalid classes
