@@ -175,7 +175,7 @@ body { margin:0; padding:0; min-height: 500px; }
     font-size: 24px;
 }
 select.select-invalid {
-    border: 1px solid #909090 !important;
+    border: 1px solid #FF003E !important;
 }
 select {
    -webkit-appearance: none;
@@ -200,9 +200,6 @@ select {
 }
 #filter_bydate:hover {
     opacity: 0.9;
-}
-#filter_bydate:disabled {
-    color: #909090 !important;
 }
 @media (max-width: 991px) {
     #filters-parent {
