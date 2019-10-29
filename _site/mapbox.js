@@ -215,12 +215,24 @@ jQuery(document).ready(function() {
         };
         var newlmsMediaData = { type: 'FeatureCollection',
             features: (lmsmediaData.features).filter(function(obj) {
-                var pubDate = new Date(obj.properties.date);
-                return (pubDate >=  filter_start_date) && (pubDate <= filter_end_date);
+                let withinDateBounds = false
+                let pubDateList = Object.keys(obj.properties).map(p => {
+                      if (p.slice(0,4) === 'date' && obj.properties[p]) {
+                        // is a "date" property and has a date value input
+                        let formattedDate = `${obj.properties[p].slice(0,3)}1/${obj.properties[p].slice(3)}`
+                        // adds a day into the date value so javascript can create a Date object
+                        return new Date(formattedDate);
+                      }
+                    })
+                pubDateList.forEach((pubDate) => {
+                    if ((pubDate >=  filter_start_date) && (pubDate <= filter_end_date)) {
+                        withinDateBounds = true
+                    }
+                })
+                return withinDateBounds;
             })
         };
         // Reload the map.
-        // TODO: verify filters are working
         map.getSource('media').setData(newMediaData);
         map.getSource('lmsmedia').setData(newlmsMediaData);
     });
@@ -275,7 +287,7 @@ jQuery(document).ready(function() {
             // validation error. Else proceed.
             if (end_month < start_month) {
                 // Disable filter button
-                $('#filter_bydate').prop('disabled', 'disabled').text('Invalid date selection');
+                $('#filter_bydate').prop('disabled', 'disabled').text('Invalid date');
                 // Add invalid classes
                 $('#end_year_select, #end_month_select').addClass('select-invalid');
             } else {
@@ -288,7 +300,7 @@ jQuery(document).ready(function() {
             // When end year less than start year,
             // validation error.
             // Disable filter button
-            $('#filter_bydate').prop('disabled', 'disabled').text('Invalid date selection');
+            $('#filter_bydate').prop('disabled', 'disabled').text('Invalid date');
             // Add invalid classes
             $('#end_year_select, #end_month_select').addClass('select-invalid');
         } else {
