@@ -70,7 +70,6 @@ function featuresOnClick(e) {
     } else { // prevent click event from passing along to other nearby clusters
         e.originalEvent.cancelBubble = true;
     }
-    console.log('e >>>>>>>>', e)
     if (e.features.length === 0) { return; }
     var coords = e.features[0].geometry.coordinates;
     if (!e.features[0].properties.hasOwnProperty('point_count')) {
@@ -111,9 +110,8 @@ function featuresOnClick(e) {
 map.on('click', 'clusters', featuresOnClick);
 map.on('click', 'lmsclusters', featuresOnClick);
 
-var req = new XMLHttpRequest();
-req.addEventListener("load", function () {
-    var rows = JSON.parse(this.responseText).feed.entry;
+let reqHandler = (source, req) => {
+    var rows = JSON.parse(req.responseText).feed.entry;
     var properties = Object.keys(rows[0])
         .filter(function (p) { return p.startsWith("gsx$"); })
         .map(function (p) { return p.substr(4); });
@@ -138,42 +136,24 @@ req.addEventListener("load", function () {
             properties: row
         };
     });
-    mediaData = { type: 'FeatureCollection', features: items };
-    map.getSource('media').setData(mediaData);
-});
+    if (source === 'media') {
+        mediaData = { type: 'FeatureCollection', features: items };
+    } else {
+        lmsmediaData = { type: 'FeatureCollection', features: items };
+    }
+    let data = source === 'media' ? mediaData : lmsmediaData
+    map.getSource(source).setData(data);
+}
+
+// Fetch Local Article Data
+var req = new XMLHttpRequest();
+req.addEventListener("load", () => reqHandler('media', req));
 req.open("GET", SHEET_URL);
 req.send();
 
+// Fetch LMS Data
 var lmsreq = new XMLHttpRequest();
-lmsreq.addEventListener("load", function () {
-    var rows = JSON.parse(this.responseText).feed.entry;
-    var properties = Object.keys(rows[0])
-        .filter(function (p) { return p.startsWith("gsx$"); })
-        .map(function (p) { return p.substr(4); });
-
-    var items = rows.map(function (r) {
-        var row = {};
-        properties.forEach(function (p) {
-            row[p] = r["gsx$" + p].$t === "" ? null : r["gsx$" + p].$t;
-            if (['Latitude', 'Longitude'].indexOf(p) !== -1) {
-                row[p] = +row[p];
-            }
-            if (row[p] === null) {
-                row[p] = '';
-            }
-        });
-        return {
-            type: 'Feature',
-            geometry: {
-                type: 'Point',
-                coordinates: [row.longitude, row.latitude]
-            },
-            properties: row
-        };
-    });
-    lmsmediaData = { type: 'FeatureCollection', features: items };
-    map.getSource('lmsmedia').setData(lmsmediaData);
-});
+lmsreq.addEventListener("load", () => reqHandler('lmsmedia', lmsreq));
 lmsreq.open("GET", LMS_SHEET_URL);
 lmsreq.send();
 
@@ -292,7 +272,7 @@ jQuery(document).ready(function() {
                 $('#end_year_select, #end_month_select').addClass('select-invalid');
             } else {
                 // Enable filter button
-                $('#filter_bydate').prop('disabled', false).text('Go');
+                $('#filter_bydate').prop('disabled', false).text('GO');
                 // Add invalid classes
                 $('#end_year_select, #end_month_select').removeClass('select-invalid');
             }
@@ -307,7 +287,7 @@ jQuery(document).ready(function() {
             // Else remove any preceding validation
             // error warnings.
             // Enable filter button
-            $('#filter_bydate').prop('disabled', false).text('Go');
+            $('#filter_bydate').prop('disabled', false).text('GO');
             // Add invalid classes
             $('#end_year_select, #end_month_select').removeClass('select-invalid');
         }
