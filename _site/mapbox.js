@@ -292,7 +292,7 @@ jQuery(document).ready(function() {
                 $('#end_year_select, #end_month_select').addClass('select-invalid');
             } else {
                 // Enable filter button
-                $('#filter_bydate').prop('disabled', false).text('Go');
+                $('#filter_bydate').prop('disabled', false).text('GO');
                 // Add invalid classes
                 $('#end_year_select, #end_month_select').removeClass('select-invalid');
             }
@@ -307,7 +307,7 @@ jQuery(document).ready(function() {
             // Else remove any preceding validation
             // error warnings.
             // Enable filter button
-            $('#filter_bydate').prop('disabled', false).text('Go');
+            $('#filter_bydate').prop('disabled', false).text('GO');
             // Add invalid classes
             $('#end_year_select, #end_month_select').removeClass('select-invalid');
         }
