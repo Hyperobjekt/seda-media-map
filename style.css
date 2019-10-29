@@ -6,6 +6,7 @@ body { margin:0; padding:0; min-height: 500px; }
     overflow-y: scroll;
     margin-bottom: 0;
     padding: 24px;
+    padding-top: 34px;
     border: none;
 }
 .mapboxgl-popup-close-button, .mapboxgl-popup-close-button.close {
@@ -76,21 +77,22 @@ body { margin:0; padding:0; min-height: 500px; }
 }
 /* Filtering panel and controls */
 .filters-parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    top: -60px;
+    top: 0;
     z-index: 3000;
     width: 100%;
-    transition: top 200ms ease-in-out;
-}
-.filters-parent.show {
-    top: 0;
-}
-.show .filters-panel {
     box-shadow: 0 3px 6px 0 hsla(0,0%,57%,.23);
     height: 74px;
+    background-color: #fff;
 }
 .filters-panel {
-    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 74px;
     width: 100%;
     height: 60px;
     font-family: Akkurat-Bold,sans-serif;
@@ -99,10 +101,19 @@ body { margin:0; padding:0; min-height: 500px; }
     font-weight: 400;
     margin-left: 0;
     margin-right: 0;
+    max-width: 600px;
 }
-.filters-button {
-    float: right;
-    margin-top: -1px;
+.filters-title,
+.text-to,
+#filter_bydate,
+#start_month_select,
+#start_year_select,
+#end_month_select,
+#end_year_select {
+    font-family: Akkurat-Bold,sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 1000;
 }
 #filters_button,
 #filter_bydate,
@@ -112,34 +123,40 @@ body { margin:0; padding:0; min-height: 500px; }
 #end_year_select {
     font-family: Akkurat-Bold,sans-serif;
     letter-spacing: .93333333px;
-    font-size: 14px;
     font-weight: 400;
-    background-color: white;
+    background-color: transparent;
+    padding: 10px;
+    padding-right: 20px;
     height: 40px;
-    border: 1px solid #efefef;
     box-shadow: none;
-    padding: 8px 24px;
     position: relative;
     border: none;
     border-radius: 0;
     text-transform: uppercase;
-    /* width: 100%; */
     text-align: left;
-    color: #050403;
+}
+.start-controls, .end-controls {
+    display: flex;
+}
+.start-controls > label > *, .end-controls > label > * {
+    color: #4797DD;
+    cursor: pointer;
+}
+.start-controls > label, .end-controls > label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.start-controls i, .end-controls i {
+    position: absolute;
+    padding-top: 3px;
+}
+#filter_bydate {
     box-shadow: 0 3px 6px 0 hsla(0,0%,57%,.23);
-}
-#filters_button i {
-    color: #e24000;
-    padding-left: 8px;
-}
-#filters_button i.hide {
-    display: none;
-}
-.filters-parent.show #filters_button i.hide {
-    display: inline-block;
-}
-.filters-parent.show #filters_button i.show {
-    display: none;
+    border: 1px solid #efefef;
+    padding: 10px 24px;
 }
 .date-filters-title,
 .date-filter-start-title,
@@ -157,36 +174,14 @@ body { margin:0; padding:0; min-height: 500px; }
     transform-origin: right;
     font-size: 24px;
 }
-.filters-parent .row {
-    justify-content: center;
-}
-.filters-parent .row .column.date,
-.filters-parent .row .column.start-controls,
-.filters-parent .row .column.end-controls {
-    padding: 1rem 1.75rem;
-    flex: 0 0 auto;
-}
-.column .text-to {
-    line-height: 40px;
-    margin: 1rem 12px;
-    font-family: Akkurat-Regular,sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: .7px;
-    color: #737373;
-    text-transform: uppercase;
-
-}
-.column.to {
-    padding: 1rem 0;
-}
 select.select-invalid {
     border: 1px solid #909090 !important;
 }
 select {
    -webkit-appearance: none;
    -moz-appearance: none;
-   appearance: none;       /* remove default arrow */
+   appearance: none;
+   /* remove default arrow */
    /*background-image: url(...); */  /* add custom arrow */
 }
 #start_month_select,
@@ -196,52 +191,21 @@ select {
     font-family: Akkurat-Regular,sans-serif;
 }
 #filter_bydate {
-    color: #e24000;
-    margin-top: 1rem;
-    min-width: 250px;
+    color: #fff;
+    background-color: #FF003E;
+    min-width: 50px;*/
     text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+#filter_bydate:hover {
+    opacity: 0.9;
 }
 #filter_bydate:disabled {
     color: #909090 !important;
 }
 @media (max-width: 991px) {
-    .filters-parent {
-        top: -200px;
-    }
-    .show .filters-panel {
-        height: 200px;
-    }
-    .column {
-        text-align: center;
-        width: 100%;
-        padding-top: 0;
-        padding-bottom: 0;
-    }
-    .column.start-controls,
-    .column.end-controls {
-        height: 28px;
-    }
-    .column.to {
-        height: 20px;
-    }
-    #filter_bydate, #start_month_select, #start_year_select, #end_month_select, #end_year_select {
-        padding-top: 0;
-        padding-bottom: 0;
-        margin-bottom: 0;
-    }
-    select {
-        margin-bottom: 0;
-    }
-    .filters-parent .row .column.date,
-    .filters-parent .row .column.start-controls,
-    .filters-parent .row .column.end-controls,
-    .column.to  {
-        padding: 0;
-    }
-    .filters-parent .row .column.start-controls {
-        margin-top: 1rem;
-    }
-    .filters-parent .row .column.go-button {
-        margin-top: .5rem;
+    #filters-parent {
+        display: none;
     }
 }

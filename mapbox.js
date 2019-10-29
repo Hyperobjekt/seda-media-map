@@ -188,13 +188,6 @@ jQuery(document).ready(function() {
     }
     setMaxDate();
 
-    // Set up button to display filter(switch)
-    $('#filters_button').click(function(e) {
-        if ($('#filters-parent').length >= 1) {
-            $('#filters-parent').toggleClass('show');
-        }
-    });
-
     $('#filter_bydate').click(function(e) {
         // Set filter range from form elements.
         var start = new Date(

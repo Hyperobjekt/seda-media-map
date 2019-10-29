@@ -15,7 +15,6 @@ var filter_start_date = null;
 var filter_end_date = null;
 
 var mediaData = {};
-
 var lmsmediaData = {};
 
 map.on('loaded', function() {
@@ -28,7 +27,6 @@ map.on('mouseenter', 'clusters', function() {
 map.on('mouseleave', 'clusters', function() {
     map.getCanvas().style.cursor = '';
 });
-
 map.on('mouseenter', 'lmsclusters', function() {
     map.getCanvas().style.cursor = 'pointer';
 });
@@ -190,20 +188,12 @@ jQuery(document).ready(function() {
     }
     setMaxDate();
 
-    // Set up button to display filter(switch)
-    $('#filters_button').click(function(e) {
-        if ($('#filters-parent').length >= 1) {
-            $('#filters-parent').toggleClass('show');
-        }
-    });
-
     $('#filter_bydate').click(function(e) {
         // Set filter range from form elements.
         var start = new Date(
             $('#start_year_select').val(),
             $('#start_month_select').val()
         );
-
         filter_start_date = start;
         // End, have to take the last day of the month,
         // which we will get by stepping back from the subsequent month.
