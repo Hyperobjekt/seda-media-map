@@ -1,3 +1,15 @@
+/**
+ * startsWith polyfill
+ */
+if (!String.prototype.startsWith) {
+    Object.defineProperty(String.prototype, 'startsWith', {
+        value: function(search, rawPos) {
+            var pos = rawPos > 0 ? rawPos|0 : 0;
+            return this.substring(pos, pos + search.length) === search;
+        }
+    });
+}
+
 var SHEET_URL = 'https://spreadsheets.google.com/feeds/list/1vDvjR4Tgj9NnbLZwmSyJKDrEAE4gAHf0NUCjp2i7D90/1/public/values?alt=json'
 var LMS_SHEET_URL = 'https://spreadsheets.google.com/feeds/list/1vDvjR4Tgj9NnbLZwmSyJKDrEAE4gAHf0NUCjp2i7D90/3/public/values?alt=json'
 
@@ -36,18 +48,10 @@ map.on('mouseleave', 'lmsclusters', function() {
 
 function createTooltip(coords, features) {
     var content = document.createElement('div');
-    console.log('features: ', features)
     if (features[0].properties.lmsreferrerlinknotfordisplay) {
         // LMS tool tip
         content.innerHTML = features.map(function (f) {
-          return (
-            `<p>
-                <a target="_blank" href="${f.properties.institutionwebsite}">
-                    ${f.properties.institution}
-                </a>
-            </p>
-            <p>${f.properties.notesdisplayed}</p>`
-            )
+          return ("<p><a target='_blank' href=" + f.properties.institutionwebsite + ">" + f.properties.institution + "</a></p><p>" + f.properties.notesdisplayed +"</p>")
         })
     } else {
         // Media Coverage tool tip
@@ -110,7 +114,7 @@ function featuresOnClick(e) {
 map.on('click', 'clusters', featuresOnClick);
 map.on('click', 'lmsclusters', featuresOnClick);
 
-let reqHandler = (source, req) => {
+let reqHandler = function(source, req) {
     var rows = JSON.parse(req.responseText).feed.entry;
     var properties = Object.keys(rows[0])
         .filter(function (p) { return p.startsWith("gsx$"); })
@@ -147,13 +151,13 @@ let reqHandler = (source, req) => {
 
 // Fetch Local Article Data
 var req = new XMLHttpRequest();
-req.addEventListener("load", () => reqHandler('media', req));
+req.addEventListener("load",  function() { reqHandler('media', req) });
 req.open("GET", SHEET_URL);
 req.send();
 
 // Fetch LMS Data
 var lmsreq = new XMLHttpRequest();
-lmsreq.addEventListener("load", () => reqHandler('lmsmedia', lmsreq));
+lmsreq.addEventListener("load", function() { reqHandler('lmsmedia', lmsreq) });
 lmsreq.open("GET", LMS_SHEET_URL);
 lmsreq.send();
 
@@ -196,15 +200,15 @@ jQuery(document).ready(function() {
         var newlmsMediaData = { type: 'FeatureCollection',
             features: (lmsmediaData.features).filter(function(obj) {
                 let withinDateBounds = false
-                let pubDateList = Object.keys(obj.properties).map(p => {
+                let pubDateList = Object.keys(obj.properties).map(function(p) {
                       if (p.slice(0,4) === 'date' && obj.properties[p]) {
                         // is a "date" property and has a date value input
-                        let formattedDate = `${obj.properties[p].slice(0,3)}1/${obj.properties[p].slice(3)}`
+                        let formattedDate = obj.properties[p].slice(0,3) + "1/" + obj.properties[p].slice(3)
                         // adds a day into the date value so javascript can create a Date object
                         return new Date(formattedDate);
                       }
                     })
-                pubDateList.forEach((pubDate) => {
+                pubDateList.forEach(function(pubDate) {
                     if ((pubDate >=  filter_start_date) && (pubDate <= filter_end_date)) {
                         withinDateBounds = true
                     }
