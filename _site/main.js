@@ -16,7 +16,7 @@ var LMS_SHEET_URL = 'https://spreadsheets.google.com/feeds/list/1vDvjR4Tgj9NnbLZ
 mapboxgl.accessToken = 'pk.eyJ1IjoiaHlwZXJvYmpla3QiLCJhIjoiY2pzZ3Bnd3piMGV6YTQzbjVqa3Z3dHQxZyJ9.rHobqsY_BjkNbqNQS4DNYw';
 var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/hyperobjekt/ck2grlul604t31cqmsqp0pzpu',
+    style: './style.json',
     center: [-103.59179687498357, 40.66995747013945],
     zoom: 3
 });

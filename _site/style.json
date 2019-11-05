@@ -291,7 +291,7 @@
             "filter": ["has", "point_count"],
             "layout": {
                 "text-field": "{point_count_abbreviated}",
-                "text-font": ["Lato+Bold"],
+                "text-font": ["Lato Bold"],
                 "text-size": 11
             },
             "paint": {
@@ -325,7 +325,7 @@
             "filter": ["has", "point_count"],
             "layout": {
                 "text-field": "{point_count_abbreviated}",
-                "text-font": ["Lato+Bold"],
+                "text-font": ["Lato Bold"],
                 "text-size": 11
             },
             "paint": {
