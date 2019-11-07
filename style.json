@@ -262,7 +262,7 @@
             "source": "composite",
             "source-layer": "stateData-a3l7jw",
             "layout": {},
-            "paint": {"line-color": "#f89da0"}
+            "paint": {"line-color": "#E4E4E4"}
         },
         {
             "id": "clusters",
