@@ -44,7 +44,7 @@
             "source-layer": "water",
             "filter": ["all"],
             "layout": {"visibility": "visible"},
-            "paint": {"fill-color": "#ECECEF"}
+            "paint": {"fill-color": "#EAEEF2"}
         },
         {
             "id": "road",
@@ -262,7 +262,7 @@
             "source": "composite",
             "source-layer": "stateData-a3l7jw",
             "layout": {},
-            "paint": {"line-color": "#E4E4E4"}
+            "paint": {"line-color": "#D3D9DD"}
         },
         {
             "id": "clusters",
