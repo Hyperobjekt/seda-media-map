@@ -51,7 +51,7 @@ function createTooltip(coords, features) {
     if (features[0].properties.lmsreferrerlinknotfordisplay) {
         // LMS tool tip
         content.innerHTML = features.map(function (f) {
-          return ("<p><a target='_blank' href=" + f.properties.institutionwebsite + ">" + f.properties.institution + "</a></p><p>" + f.properties.notesdisplayed +"</p>")
+          return ("<p class='lms-modal'><a target='_blank' href=" + f.properties.institutionwebsite + ">" + f.properties.institution + "</a></p><p class='lms-modal'>" + f.properties.notesdisplayed +"</p>")
         })
     } else {
         // Media Coverage tool tip

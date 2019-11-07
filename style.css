@@ -1,3 +1,28 @@
+@font-face {
+    font-family: 'MaisonNeue-Bold';
+    src: url('/fonts/MaisonNeue-Bold.ttf');
+  }
+  @font-face {
+    font-family: 'MaisonNeue-Book';
+    src: url('/fonts/MaisonNeue-Book.ttf');
+  }
+  @font-face {
+    font-family: 'MaisonNeue-Medium';
+    src: url('/fonts/MaisonNeue-Medium.ttf');
+  }
+  @font-face {
+    font-family: 'SharpGrotesk-Book20';
+    src: url('/fonts/SharpGrotesk-Book20.otf');
+  }
+  @font-face {
+    font-family: 'SharpGrotesk-Medium15';
+    src: url('/fonts/SharpGrotesk-Medium15.otf');
+  }
+  @font-face {
+    font-family: 'SharpGrotesk-Medium20';
+    src: url('/fonts/SharpGrotesk-Medium20.otf');
+  }  
+
 body { margin:0; padding:0; min-height: 540px; }
 #map { position:absolute; top:0; bottom:0; width:100%; }
 .mapboxgl-popup-content {
@@ -58,19 +83,25 @@ body { margin:0; padding:0; min-height: 540px; }
     background-color: transparent;
 }
 .mapboxgl-popup-content p {
-    font-family: Akkurat-Regular,sans-serif;
-    font-size: 14px;
+    font-family: 'SharpGrotesk-Medium20';
+    font-size: 15px;
     font-weight: 400;
-    letter-spacing: 0;
-    margin-bottom: 8px;
+    letter-spacing: 0.015;
+    margin-bottom: 16px;
+    line-height: 1.5;
 }
 .mapboxgl-popup-content a {
-    color: #469ee0;
+    font-family: 'MaisonNeue-Book';
+    font-size: 15px;
+    color: #0078D4;
     text-decoration: none;
     display: inline-block;
+    line-height: 1.5;
+    font-weight: 400;
+    margin-top: 6px;
 }
 .mapboxgl-popup-content p {
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 .mapboxgl-popup-content p:last-child {
     margin-bottom: 16px;
