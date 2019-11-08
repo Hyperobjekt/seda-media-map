@@ -1,26 +1,26 @@
 @font-face {
     font-family: 'MaisonNeue-Bold';
-    src: url('/fonts/MaisonNeue-Bold.ttf');
+    src: url('./fonts/MaisonNeue-Bold.ttf');
   }
   @font-face {
     font-family: 'MaisonNeue-Book';
-    src: url('/fonts/MaisonNeue-Book.ttf');
+    src: url('./fonts/MaisonNeue-Book.ttf');
   }
   @font-face {
     font-family: 'MaisonNeue-Medium';
-    src: url('/fonts/MaisonNeue-Medium.ttf');
+    src: url('./fonts/MaisonNeue-Medium.ttf');
   }
   @font-face {
     font-family: 'SharpGrotesk-Book20';
-    src: url('/fonts/SharpGrotesk-Book20.otf');
+    src: url('./fonts/SharpGrotesk-Book20.otf');
   }
   @font-face {
     font-family: 'SharpGrotesk-Medium15';
-    src: url('/fonts/SharpGrotesk-Medium15.otf');
+    src: url('./fonts/SharpGrotesk-Medium15.otf');
   }
   @font-face {
     font-family: 'SharpGrotesk-Medium20';
-    src: url('/fonts/SharpGrotesk-Medium20.otf');
+    src: url('./fonts/SharpGrotesk-Medium20.otf');
   }  
 
 body { margin:0; padding:0; min-height: 540px; }
