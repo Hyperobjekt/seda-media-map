@@ -23,6 +23,11 @@
     src: url('./fonts/SharpGrotesk-Medium20.otf');
   }  
 
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 body { margin:0; padding:0; min-height: 540px; }
 #map { position:absolute; top:0; bottom:0; width:100%; }
 .mapboxgl-popup-content {
@@ -90,6 +95,10 @@ body { margin:0; padding:0; min-height: 540px; }
     margin-bottom: 16px;
     line-height: 1.5;
 }
+.mapboxgl-popup-content p.lms-modal {
+    font-family: 'MaisonNeue-Book';
+    color: #7d7d7d;
+}
 .mapboxgl-popup-content a {
     font-family: 'MaisonNeue-Book';
     font-size: 15px;
@@ -156,7 +165,7 @@ body { margin:0; padding:0; min-height: 540px; }
 #start_year_select,
 #end_month_select,
 #end_year_select {
-    font-family: Akkurat-Bold,sans-serif;
+    font-family: 'SharpGrotesk-Medium20';
     font-size: 16px;
     letter-spacing: .93333333px;
     font-weight: 600;
@@ -199,10 +208,12 @@ select {
     padding: 10px 24px;
     color: #fff;
     background-color: #FF003E;
-    min-width: 50px;*/
+    min-width: 50px;
     text-align: center;
     cursor: pointer;
     border-radius: 4px;
+    font-family: 'SharpGrotesk-Medium15';
+    font-size: 14px;
 }
 #filter_bydate:hover {
     opacity: 0.9;
