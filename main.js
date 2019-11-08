@@ -52,7 +52,7 @@ function createTooltip(coords, features) {
         // LMS tool tip
         content.innerHTML = features.map(function (f) {
           return ("<p class='lms-modal'><a target='_blank' href=" + f.properties.institutionwebsite + ">" + f.properties.institution + "</a></p><p class='lms-modal'>" + f.properties.notesdisplayed +"</p>")
-        })
+        }).join('');
     } else {
         // Media Coverage tool tip
         content.innerHTML = features.map(function (f) {
