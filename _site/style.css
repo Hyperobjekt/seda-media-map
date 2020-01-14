@@ -30,6 +30,45 @@
 
 body { margin:0; padding:0; min-height: 540px; }
 #map { position:absolute; top:0; bottom:0; width:100%; }
+/* Start LMS - Articles Toggle */
+#toggle-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 175px;
+    margin-right: 35px;
+    cursor: pointer;
+}
+#toggle-data label {
+    font-family: 'SharpGrotesk-Medium20', Akkurat-Bold,sans-serif;
+    margin-bottom: 0;
+    font-size: 18px;
+}
+.switch-container {
+    position: relative;
+    width: 56px;
+    height: 32px;
+    border-radius: 16px;
+    background: #c6cccf;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+}
+.switch-toggle {
+    width: 32px;
+    height: 32px;
+    border: 5px solid #e24000;
+    border-radius: 16px;
+    background: #fff;
+    transition: transform .2s ease;
+    transform: translateX(0);
+    float: left;
+    margin-left: 0;
+    transition: margin-left .5s;
+}
+.switch-toggle.on {
+    margin-left: 25px;
+}
+/* End LMS - Articles Toggle */
 .mapboxgl-popup-content {
     max-width: 350px;
     max-height: 250px;
