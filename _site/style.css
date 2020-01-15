@@ -148,9 +148,6 @@ body { margin:0; padding:0; min-height: 540px; }
     font-weight: 400;
     margin-top: 6px;
 }
-.mapboxgl-popup-content p {
-    /* font-weight: bold; */
-}
 .mapboxgl-popup-content p:last-child {
     margin-bottom: 16px;
 }
@@ -214,12 +211,6 @@ body { margin:0; padding:0; min-height: 540px; }
     border: none;
     border-radius: 0;
     text-align: left;
-}
-#start_month_select,
-#start_year_select,
-#end_month_select,
-#end_year_select {
-    
 }
 #start_year_select {
     margin-right: 4px;

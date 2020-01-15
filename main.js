@@ -48,10 +48,10 @@ map.on('mouseenter', 'clusters', function() {
 map.on('mouseleave', 'clusters', function() {
     map.getCanvas().style.cursor = '';
 });
-map.on('mouseenter', 'lmsclusters', function() {
+map.on('mouseenter', 'lms_clusters', function() {
     map.getCanvas().style.cursor = 'pointer';
 });
-map.on('mouseleave', 'lmsclusters', function() {
+map.on('mouseleave', 'lms_clusters', function() {
     map.getCanvas().style.cursor = '';
 });
 
